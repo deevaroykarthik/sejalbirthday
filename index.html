@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Sejal's 24th — A Little Late, A Lot of Love 🌸</title>
+<title>Happy (Belated) Birthday, Sejal 🌸</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400;1,700&family=Lato:wght@300;400;700&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet">
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -230,9 +230,28 @@ body{
   display:block;
   filter:saturate(1.05) brightness(0.95);
   transition:filter 0.3s;
+  /* Prevent selection highlight */
+  -webkit-user-select:none;
+  user-select:none;
+  pointer-events:none;
 }
 .photo-card:hover img{filter:saturate(1.15) brightness(1);}
 
+/* Invisible overlay on every photo — blocks right-click & drag */
+.photo-card::after{
+  content:'';
+  position:absolute;
+  inset:0;
+  z-index:5;
+  background:transparent;
+  cursor:pointer;
+}
+/* Lightbox img also protected */
+#lb img{
+  -webkit-user-select:none;
+  user-select:none;
+  pointer-events:none;
+}
 .photo-placeholder{
   width:100%;height:100%;
   display:flex;flex-direction:column;
@@ -655,6 +674,9 @@ footer{
           <img src="IMG_2381.jpeg" alt="Sejal">
         </div>
         <div class="photo-card" id="photo-5" onclick="openLb(this)">
+          <img src="IMG_2390.jpeg" alt="Sejal">
+        </div>
+        <div class="photo-card" id="photo-6" onclick="openLb(this)">
           <img src="IMG_2393.jpeg" alt="Sejal">
         </div>
       </div>
@@ -957,7 +979,32 @@ function openNote(){
   }
 }
 
-// ── BALLOON SECTION confetti on scroll ──
+// ── IMAGE PROTECTION ──
+// 1. Disable right-click globally
+document.addEventListener('contextmenu', e => e.preventDefault());
+
+// 2. Disable drag on all images
+document.querySelectorAll('img').forEach(img => {
+  img.setAttribute('draggable', 'false');
+  img.addEventListener('dragstart', e => e.preventDefault());
+});
+
+// 3. Disable common keyboard save shortcuts
+document.addEventListener('keydown', e => {
+  // Block Ctrl+S, Ctrl+U, Ctrl+Shift+I, F12, Ctrl+P
+  if(
+    (e.ctrlKey && ['s','u','p'].includes(e.key.toLowerCase())) ||
+    (e.ctrlKey && e.shiftKey && ['i','j','c'].includes(e.key.toLowerCase())) ||
+    e.key === 'F12' || e.key === 'PrintScreen'
+  ){
+    e.preventDefault();
+    return false;
+  }
+});
+
+// 4. Disable text/image selection on the whole page
+document.addEventListener('selectstart', e => e.preventDefault());
+
 const bdayObs=new IntersectionObserver(entries=>{
   entries.forEach(e=>{
     if(e.isIntersecting){triggerConf(80);bdayObs.unobserve(e.target);}
